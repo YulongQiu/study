@@ -2,6 +2,7 @@
 #define CLOUD_CLIENT_H
 #include <string>
 #include <http/restclient.h>
+
 using namespace std;
 
 class CloudClient
