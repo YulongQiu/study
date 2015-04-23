@@ -1,107 +1,107 @@
 #include "ApiUrl.h"
 
-ApiUrl()
+ApiUrl::ApiUrl()
 : _apiUrl("http://api.atsmart.io/v2")
 {
 
 }
 
-~ApiUrl()
+ApiUrl::~ApiUrl()
 {
 
 }
 
-string getTokenUrl()
+string ApiUrl::getTokenUrl()
 {
 	return _apiUrl + "/auth/device/token";
 }
 
-string getWebValidUrl()
+string ApiUrl::getWebValidUrl()
 {
 	return _apiUrl + "/device/datetime";
 }
 
-string getDateTimeUrl()
+string ApiUrl::getDateTimeUrl()
 {
 	return _apiUrl + "/device/datetime";
 }
 
-string getUserInfoUrl()
+string ApiUrl::getUserInfoUrl()
 {
 	return _apiUrl+"/device/userlist";
 }
 
-string getDevicePropertyUrl()
+string ApiUrl::getDevicePropertyUrl()
 {
 	return _apiUrl + "/device/property";
 }
 
-string getDeviceSettingUrl()
+string ApiUrl::getDeviceSettingUrl()
 {
 	return _apiUrl + "/device/setting";
 }
 
-string getSubDeviceUrl()
+string ApiUrl::getSubDeviceUrl()
 {
 	return _apiUrl+"/device/sub";
 }
 
-string getVersionUrl()
+string ApiUrl::getVersionUrl()
 {
 	return _apiUrl+"/device/checkVersion";
 }
 
-string getQRCodeUrl();
+string ApiUrl::getQRCodeUrl()
 {
 	return _apiUrl+"/device_qrcode";
 }
 
-string getTriggerUrl()
+string ApiUrl::getTriggerUrl()
 {
 	return _apiUrl + "/device/trigger";
 }
 
-string getFactoryResetUrl()
+string ApiUrl::getFactoryResetUrl()
 {
 	return _apiUrl+"/device/factoryreset";
 }
 
-string getDiagnoseInfoUrl()
+string ApiUrl::getDiagnoseInfoUrl()
 {
 	return _apiUrl + "/uploadfile";
 }
 
-string getHeartbeatUrl()
+string ApiUrl::getHeartbeatUrl()
 {
 	return _apiUrl + "/device/heartbeat";
 }
 
-string getBatchHeartbeatUrl()
+string ApiUrl::getBatchHeartbeatUrl()
 {
 	return _apiUrl + "/device/batch/heartbeat";
 }
 
-string getCloudCmdUrl()
+string ApiUrl::getCloudCmdUrl()
 {
 	return _apiUrl+"/chk/device/data/ret/command";
 }
 
-string getConfigInfoUrl()
+string ApiUrl::getConfigInfoUrl()
 {
 	return _apiUrl+"/config/mqinfo";
 }
 
-string getSubDeviceOfflineUrl()
+string ApiUrl::getSubDeviceOfflineUrl()
 {
 	return _apiUrl+"/device/offline";
 }
 
-string getNoticeUserUrl()
+string ApiUrl::getNoticeUserUrl()
 {
 	return _apiUrl+"/mq/pub2user";
 }
 
-string getNoticeConfigUrl()
+string ApiUrl::getNoticeConfigUrl()
 {
 	return _apiUrl+"/config/mqinfo";
 }

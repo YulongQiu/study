@@ -2,6 +2,7 @@
 #define CLOUD_CLIENT_H
 #include <string>
 #include <http/restclient.h>
+#include "ApiUrl.h"
 
 using namespace std;
 
@@ -10,28 +11,31 @@ class CloudClient
 public:
     CloudClient(string productId, string productKey, string productSecret);
     ~CloudClient();
-    void getDeviceToken();
-    void getDateTime();
-    void getVersion();
-    void getUserInfo();
-    void getQRCode();
-    void getMQConfig();
-    void getLocation();
-    void getDeviceProperty();
-    void putDeviceProperty();
-    void registerDevice();
-    void uploadHeartbeat();
-    void uploadLog();
-    void downloadFile();
-    void factoryReset();
-    void createSubDevice();
-    void deleteSubDevice();
+    int getDeviceToken(string &replayData);
+    int getDateTime(string &replayData);
+    int getVersion();
+    int getUserInfo();
+    int getQRCode();
+    int getMQConfig();
+    int getLocation();
+    int getDeviceProperty();
+    int putDeviceProperty();
+    int registerDevice();
+    int uploadHeartbeat();
+    int uploadLog();
+    int downloadFile();
+    int factoryReset();
+    int createSubDevice();
+    int deleteSubDevice();
+
+private:
+    void addCommonHeader(string &url);
 
 private:
     string _productId;
     string _productKey;
     string _productSecret;
-
+    ApiUrl _apiUrl;
 };
 
 #endif

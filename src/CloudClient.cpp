@@ -11,82 +11,115 @@ CloudClient::~CloudClient()
 
 }
 
-void CloudClient::getDeviceToken()
+int CloudClient::getDeviceToken(string &replayData)
+{
+    string url = _apiUrl.getTokenUrl();
+    addCommonHeader(url);
+
+    RestClient::ctypelist headers;
+    RestClient::response res;
+
+    res = RestClient::get(url, headers);
+
+    if (res.code != REST_CODE_OK)
+    {
+        return -1;
+    }
+
+    replayData = res.body;
+    return 0;
+
+}
+
+int CloudClient::getDateTime(string &replayData)
+{
+    RestClient::ctypelist headers;
+    RestClient::response res;
+
+    res = RestClient::get(_apiUrl.getDateTimeUrl(), headers);
+
+    if (res.code != REST_CODE_OK)
+    {
+        return -1;
+    }
+
+    replayData = res.body;
+    return 0;
+}
+
+int CloudClient::getVersion()
 {
 
 }
 
-void CloudClient::getDateTime()
+int CloudClient::getUserInfo()
 {
 
 }
 
-void CloudClient::getVersion()
+int CloudClient::getQRCode()
 {
 
 }
 
-void CloudClient::getUserInfo()
+int CloudClient::getMQConfig()
 {
 
 }
 
-void CloudClient::getQRCode()
+int CloudClient::getLocation()
 {
 
 }
 
-void CloudClient::getMQConfig()
+int CloudClient::getDeviceProperty()
 {
 
 }
 
-void CloudClient::getLocation()
+int CloudClient::putDeviceProperty()
 {
 
 }
 
-void CloudClient::getDeviceProperty()
+int CloudClient::registerDevice()
 {
 
 }
 
-void CloudClient::putDeviceProperty()
+int CloudClient::uploadHeartbeat()
 {
 
 }
 
-void CloudClient::registerDevice()
+int CloudClient::uploadLog()
 {
 
 }
 
-void CloudClient::uploadHeartbeat()
+int CloudClient::downloadFile()
 {
 
 }
 
-void CloudClient::uploadLog()
+int CloudClient::factoryReset()
 {
 
 }
 
-void CloudClient::downloadFile()
+int CloudClient::createSubDevice()
 {
 
 }
 
-void CloudClient::factoryReset()
+int CloudClient::deleteSubDevice()
 {
 
 }
 
-void CloudClient::createSubDevice()
+void CloudClient::addCommonHeader(string &url)
 {
-
-}
-
-void CloudClient::deleteSubDevice()
-{
-
+     url += "?DID=" + _productId + "&productkey=" + _productKey
+    + "&productsecret=" + _productSecret
+    + "&from=1";
 }
