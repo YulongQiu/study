@@ -3,6 +3,7 @@
 
 //#include "../src/network/cloud/CloudClient.h"
 #include "CloudClient.h"
+#include "md5/md5.h"
 
 class CloudClientTest : public testing::Test
 {
@@ -22,6 +23,7 @@ protected:
     }
 
     void printData();
+    // std::string getDMAGIC();
 
 
 protected:
@@ -38,19 +40,27 @@ void CloudClientTest::printData()
     std::cout << "data: \n" << jsValue.toStyledString() << std::endl;
 }
 
-/* TEST_F(CloudClientTest, getDeviceToken)
+/* std::string CloudClientTest::getDMAGIC()
+{
+    char timeStamp[128];
+    struct timeb tp;
+    ftime(&tp);
+    sprintf(timeStamp, "%ld", tp.time / 1000);
+
+    std::string key = "0000XPCA1403CNSIOLW7" + std::string(timeStamp);
+    unsigned char sig[16];
+    char	 str[33];
+    md5_buffer(key.c_str(), key.size(), (void*)sig);
+    md5_sig_to_string(sig, str, sizeof(str));
+
+    //LOG(DEBUG)<<"_puk="<<_puk<<", _sn="<<_sn<<", timeStamp="<<timeStamp<<", md5="<<std::string(str);
+
+    return std::string(str);
+} */
+/*
+TEST_F(CloudClientTest, getDeviceToken)
 {
     res = cloudClient->getDeviceToken(data);
-
-    EXPECT_EQ(res, 0);
-    EXPECT_NE(data, "");
-    printData();
-} */
-
-TEST_F(CloudClientTest, getUserInfo)
-{
-
-    res = cloudClient->getUserInfo(data);
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
@@ -66,12 +76,30 @@ TEST_F(CloudClientTest, getDateTime)
     printData();
 }
 
+TEST_F(CloudClientTest, getUserInfo)
+{
+
+    res = cloudClient->getUserInfo(data);
+
+    EXPECT_EQ(res, 0);
+    EXPECT_NE(data, "");
+    printData();
+}
+
+TEST_F(CloudClientTest, getQRCode)
+{
+    res = cloudClient->getQRCode(data);
+
+    EXPECT_EQ(res, 0);
+    EXPECT_NE(data, "");
+    printData();
+}
+
 TEST_F(CloudClientTest, checkUbootVersion)
 {
     Json::Value currentVersion;
     currentVersion["cmd"] = "ubootVersion";
-    //Json::Value versionNo["versionNO"] = "4.1.2.1";
-    currentVersion["data"]["versionNO"] = "4.1.2.1";
+    currentVersion["data"]["versionNo"] = "4.1.2.1";
     //std::cout << currentVersion.toStyledString() << std::endl;
     std::string version = currentVersion.toString();
     res = cloudClient->getVersion(version, data);
@@ -81,15 +109,21 @@ TEST_F(CloudClientTest, checkUbootVersion)
     printData();
 }
 
-
-/*
-TEST_F(CloudClientTest, getQRCode)
+TEST_F(CloudClientTest, checkVersion)
 {
-    res = cloudClient->getQRCode(data);
+    Json::Value currentVersion;
+    currentVersion["cmd"] = "systemVersion";
+    currentVersion["data"]["versionNo"] = "1.2.4.0";
+
+    std::string version = currentVersion.toString();
+    std::cout << version << std::endl;
+    res = cloudClient->getVersion(version, data);
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
+    printData();
 }
+
 
 TEST_F(CloudClientTest, getMQConfig)
 {
@@ -97,15 +131,10 @@ TEST_F(CloudClientTest, getMQConfig)
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
+    printData();
 }
+*/
 
-TEST_F(CloudClientTest, getLocation)
-{
-    res = cloudClient->getLocation(data);
-
-    EXPECT_EQ(res, 0);
-    EXPECT_NE(data, "");
-}
 
 TEST_F(CloudClientTest, getDeviceProperty)
 {
@@ -113,14 +142,16 @@ TEST_F(CloudClientTest, getDeviceProperty)
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
+    printData();
 }
-
+/*
 TEST_F(CloudClientTest, putDeviceProperty)
 {
     res = cloudClient->putDeviceProperty(data);
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
+    printData();
 }
 
 TEST_F(CloudClientTest, registerDevice)
@@ -129,6 +160,7 @@ TEST_F(CloudClientTest, registerDevice)
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
+    printData();
 }
 
 TEST_F(CloudClientTest, uploadHeartbeat)
@@ -137,6 +169,7 @@ TEST_F(CloudClientTest, uploadHeartbeat)
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
+    printData();
 }
 
 TEST_F(CloudClientTest, uploadLog)
@@ -145,6 +178,7 @@ TEST_F(CloudClientTest, uploadLog)
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
+    printData();
 }
 
 TEST_F(CloudClientTest, downloadFile)
@@ -153,6 +187,7 @@ TEST_F(CloudClientTest, downloadFile)
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
+    printData();
 }
 
 TEST_F(CloudClientTest, factoryReset)
@@ -161,6 +196,7 @@ TEST_F(CloudClientTest, factoryReset)
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
+    printData();
 }
 
 
@@ -170,6 +206,7 @@ TEST_F(CloudClientTest, createSubDevice)
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
+    printData();
 }
 
 
@@ -179,4 +216,5 @@ TEST_F(CloudClientTest, deleteSubDevice)
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
+    printData();
 } */

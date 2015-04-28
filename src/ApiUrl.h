@@ -24,10 +24,11 @@ public:
 	string getHeartbeatUrl();
 	string getBatchHeartbeatUrl();
 	string getCloudCmdUrl();
-	string getConfigInfoUrl();
 	string getSubDeviceOfflineUrl();
 	string getNoticeUserUrl();
 	string getNoticeConfigUrl();
+    string getMQConfigUrl();
+    //string getLocationUrl();
 
 private:
 	string _apiUrl;

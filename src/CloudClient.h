@@ -4,7 +4,7 @@
 #include <http/restclient.h>
 #include <jsoncpp/jsoncpp.h>
 #include "ApiUrl.h"
-
+#include <iostream>
 extern "C" {
     #include <md5/md5.h>
     #include <sys/timeb.h>
@@ -19,11 +19,11 @@ public:
     ~CloudClient();
     int getDeviceToken(/*string magic, */string &replayData);
     int getDateTime(string &replayData);
-    int getVersion(string currentVersion, string &replayData);
+    int getVersion(string &currentVersion, string &replayData);
     int getUserInfo(string &replayData);
     int getQRCode(string &replayData);
     int getMQConfig(string &replayData);
-    int getLocation(string &replayData);
+    //int getLocation(string &replayData);
     int getDeviceProperty(string &replayData);
     int putDeviceProperty(string &replayData);
     int registerDevice(string &replayData);
@@ -37,7 +37,7 @@ public:
 private:
     void addCommonHeader(string &url);
     void addToken(RestClient::ctypelist &headers);
-    //string getMagic();
+    string getMagic();
     RestClient::response httpGet(string url , string token = "", string data = "");
     RestClient::response httpPut(string url , string token = "", string data = "");
 

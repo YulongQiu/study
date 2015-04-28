@@ -1,7 +1,7 @@
 #include "ApiUrl.h"
 
 ApiUrl::ApiUrl()
-: _apiUrl("http://api.atsmart.io/v2")
+: _apiUrl("http://qdapi.atsmart.io/v2")
 {
 
 }
@@ -86,7 +86,7 @@ string ApiUrl::getCloudCmdUrl()
 	return _apiUrl+"/chk/device/data/ret/command";
 }
 
-string ApiUrl::getConfigInfoUrl()
+string ApiUrl::getMQConfigUrl()
 {
 	return _apiUrl+"/config/mqinfo";
 }
@@ -105,3 +105,8 @@ string ApiUrl::getNoticeConfigUrl()
 {
 	return _apiUrl+"/config/mqinfo";
 }
+
+/* string ApiUrl::getLocationUrl()
+{
+    return _apiUrl+"/device/location";
+} */
