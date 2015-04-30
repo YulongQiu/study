@@ -1,7 +1,13 @@
 #include "CloudClient.h"
 
-CloudClient::CloudClient(string productId, string productKey, string productSecret)
-    : _productId(productId), _productKey(productKey), _productSecret(productSecret)
+
+connect(cli->qrcodeDone, this, &M2MManager::getQRCodeComplete);
+cli->getQRCode(0);
+
+
+
+CloudClient::CloudClient(string productId, string productKey, string productSecret, string magic)
+    : _productId(productId), _productKey(productKey), _productSecret(productSecret), _magic(magic)
 {
 
 }
@@ -104,6 +110,7 @@ int CloudClient::getQRCode(string &replayData)
     addCommonHeader(url);
     url += "&UTYPE=0&QRTYPE=1&SIZE=64&FORMAT=png";
 
+    HttpRequest req(url);
     RestClient::response res = httpGet(url, _deviceToken);
     if (res.code != REST_CODE_OK)
     {
@@ -167,22 +174,61 @@ int CloudClient::putDeviceProperty(string &replayData)
     return 0;
 }
 
-int CloudClient::registerDevice(string &replayData)
+int CloudClient::registerDevice(string &properties, string &replayData)
 {
-    replayData = "1";
+    string url = _apiUrl.getDevicePropertyUrl();
+    url += "?PID=M500&DID=" + _productId;
+
+    RestClient::ctypelist headers;
+    headers.push_back("DTOKEN:" + _deviceToken);
+    RestClient::response res;
+    res = RestClient::post(url, headers, properties);
+
+    if (res.code != REST_CODE_OK)
+    {
+        return -1;
+    }
+    replayData = res.body;
     return 0;
 }
 
 int CloudClient::uploadHeartbeat(string &replayData)
 {
-    replayData = "1";
+    string url = _apiUrl.getHeartbeatUrl();
+    url += "?PID=M500&DID=" + _productId;
+
+    RestClient::response res;
+    res = httpGet(url, _deviceToken);
+
+    if (res.code != REST_CODE_OK)
+    {
+        return -1;
+    }
+    replayData = res.body;
     return 0;
 }
 
 int CloudClient::uploadLog(string &replayData)
 {
-    replayData = "1";
-    return 0;
+    std::string logFile = "/tmp/log/xweb.log";
+    std::string file = logFile + "." + _productId;
+    std::string copyLogfile = "cp " + logFile + " " + file + " && cat /dev/null > " + logFile;
+    if (system(copyLogfile.c_str()) == 0)
+    {
+        std::string uploadCmd = "curl -X -H \"Content-Type: multipart/related\" --form \"file=@" + file+ "\" ";
+        uploadCmd += "\"" + _apiUrl.getDiagnoseInfoUrl() + "?PID=M500&DID=" + _productId
+                        + "\" -H \"DTOKEN: "+ _deviceToken +"\"";
+        //LOG(WARNING)<<cmd;
+        if (system(uploadCmd.c_str()) == 0)
+        {
+            replayData = "Upload seccess.";
+            return 0;
+        }
+
+    }
+
+    replayData = "Upload failed.";
+    return -1;
 }
 
 int CloudClient::downloadFile(string &replayData)
@@ -193,21 +239,91 @@ int CloudClient::downloadFile(string &replayData)
 
 int CloudClient::factoryReset(string &replayData)
 {
-    replayData = "1";
+    string url = _apiUrl.getFactoryResetUrl();
+    url += "?PID=M500&DID=" + _productId;
+
+    RestClient::response res;
+    res = httpGet(url, _deviceToken);
+
+    if (res.code != REST_CODE_OK)
+    {
+        return -1;
+    }
+    replayData = res.body;
     return 0;
 }
 
-int CloudClient::createSubDevice(string &replayData)
+int CloudClient::createSubDevice(string &subDeviceMac, string &replayData)
 {
-    replayData = "1";
+    string url = _apiUrl.getSubDeviceUrl();
+    url += "/create?PID=M500&DID=" + _productId + "&mac=" + subDeviceMac;
+
+    RestClient::ctypelist headers;
+    headers.push_back("DTOKEN:"+_deviceToken);
+    RestClient::response res;
+    std::cout << "url: " << url << std::endl;
+    res = RestClient::post(url, headers, "");
+
+    if (res.code != REST_CODE_OK)
+    {
+        return -1;
+    }
+    replayData = res.body;
     return 0;
 }
 
-int CloudClient::deleteSubDevice(string &replayData)
+int CloudClient::bindSubDevice(string &subDeviceId, string &replayData)
 {
-    replayData = "1";
+    string url = _apiUrl.getSubDeviceUrl();
+    url += "/bind?PID=M500&DID=" + _productId + "&subDeviceId="+subDeviceId;
+
+    RestClient::ctypelist headers;
+    headers.push_back("DTOKEN:"+_deviceToken);
+    RestClient::response res;
+    res = RestClient::post(url, headers, "");
+
+    if (res.code != REST_CODE_OK)
+    {
+        return -1;
+    }
+    replayData = res.body;
     return 0;
 }
+
+int CloudClient::deleteSubDevice(string &subDeviceId, string &replayData)
+{
+    string url = _apiUrl.getSubDeviceUrl();
+    url += "/unbind?PID=M500&DID=" + _productId + "&subDeviceId="+subDeviceId;
+
+    RestClient::ctypelist headers;
+    headers.push_back("DTOKEN:"+_deviceToken);
+    RestClient::response res;
+    res = RestClient::post(url, headers, "");
+
+    if (res.code != REST_CODE_OK)
+    {
+        return -1;
+    }
+    replayData = res.body;
+    return 0;
+}
+
+int CloudClient::getTrigger(string &replayData)
+{
+    string url = _apiUrl.getTriggerUrl();
+    url += "?PID=M500&DID=" + _productId;
+
+    RestClient::response res;
+    res = httpGet(url, _deviceToken);
+
+    if (res.code != REST_CODE_OK)
+    {
+        return -1;
+    }
+    replayData = res.body;
+    return 0;
+}
+
 
 void CloudClient::addCommonHeader(string &url)
 {
@@ -265,7 +381,7 @@ string CloudClient::getMagic()
     ftime(&tp);
     sprintf(timeStamp, "%ld", tp.time / 1000);
 
-    std::string key = "0000XPCA1403CNSIOLW7" + std::string(timeStamp);
+    std::string key = "0000FDE7152926FE932C" + std::string(timeStamp);
     unsigned char sig[16];
     char	 str[33];
     md5_buffer(key.c_str(), key.size(), (void*)sig);
@@ -273,5 +389,5 @@ string CloudClient::getMagic()
 
     //LOG(DEBUG)<<"_puk="<<_puk<<", _sn="<<_sn<<", timeStamp="<<timeStamp<<", md5="<<std::string(str);
 
-    return string(str);
+    return _magic;
 }

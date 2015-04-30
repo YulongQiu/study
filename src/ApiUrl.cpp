@@ -1,7 +1,7 @@
 #include "ApiUrl.h"
 
 ApiUrl::ApiUrl()
-: _apiUrl("http://qdapi.atsmart.io/v2")
+: _apiUrl("http://api.atsmart.io/v2")
 {
 
 }

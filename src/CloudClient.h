@@ -15,7 +15,7 @@ using namespace std;
 class CloudClient
 {
 public:
-    CloudClient(string productId, string productKey, string productSecret);
+    CloudClient(string productId, string productKey, string productSecret, string magic);
     ~CloudClient();
     int getDeviceToken(/*string magic, */string &replayData);
     int getDateTime(string &replayData);
@@ -26,15 +26,22 @@ public:
     //int getLocation(string &replayData);
     int getDeviceProperty(string &replayData);
     int putDeviceProperty(string &replayData);
-    int registerDevice(string &replayData);
+    int registerDevice(string &properties, string &replayData);
     int uploadHeartbeat(string &replayData);
     int uploadLog(string &replayData);
     int downloadFile(string &replayData);
     int factoryReset(string &replayData);
-    int createSubDevice(string &replayData);
-    int deleteSubDevice(string &replayData);
+    int createSubDevice(string &subDeviceMac, string &replayData);
+    int bindSubDevice(string &subDeviceId, string &replayData);
+    int deleteSubDevice(string &subDeviceId, string &replayData);
+    int getTrigger(string &replayData);
+
+public:
+    Signal<ReplyId> qrcodeDone;
 
 private:
+    void onqrCodeComplete(HttpReply* reply);
+
     void addCommonHeader(string &url);
     void addToken(RestClient::ctypelist &headers);
     string getMagic();
@@ -46,6 +53,7 @@ private:
     string _productKey;
     string _productSecret;
     string _deviceToken;
+    string _magic;
     ApiUrl _apiUrl;
 };
 

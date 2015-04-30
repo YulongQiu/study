@@ -12,7 +12,8 @@ protected:
     {
         res = 0;
         data = "";
-        cloudClient = new CloudClient("2F1F338D1064DBCF", "CE3EAEE20D55D85D", "D116BF8A2CCE15F2");
+        cloudClient = new CloudClient("2F1F338D1064DBCF", "CE3EAEE20D55D85D",
+                                      "D116BF8A2CCE15F2", getDMAGIC());
         std::string token;
         cloudClient->getDeviceToken(token);
     }
@@ -23,7 +24,7 @@ protected:
     }
 
     void printData();
-    // std::string getDMAGIC();
+    std::string getDMAGIC();
 
 
 protected:
@@ -40,7 +41,7 @@ void CloudClientTest::printData()
     std::cout << "data: \n" << jsValue.toStyledString() << std::endl;
 }
 
-/* std::string CloudClientTest::getDMAGIC()
+std::string CloudClientTest::getDMAGIC()
 {
     char timeStamp[128];
     struct timeb tp;
@@ -56,7 +57,7 @@ void CloudClientTest::printData()
     //LOG(DEBUG)<<"_puk="<<_puk<<", _sn="<<_sn<<", timeStamp="<<timeStamp<<", md5="<<std::string(str);
 
     return std::string(str);
-} */
+}
 /*
 TEST_F(CloudClientTest, getDeviceToken)
 {
@@ -133,35 +134,7 @@ TEST_F(CloudClientTest, getMQConfig)
     EXPECT_NE(data, "");
     printData();
 }
-*/
 
-
-TEST_F(CloudClientTest, getDeviceProperty)
-{
-    res = cloudClient->getDeviceProperty(data);
-
-    EXPECT_EQ(res, 0);
-    EXPECT_NE(data, "");
-    printData();
-}
-/*
-TEST_F(CloudClientTest, putDeviceProperty)
-{
-    res = cloudClient->putDeviceProperty(data);
-
-    EXPECT_EQ(res, 0);
-    EXPECT_NE(data, "");
-    printData();
-}
-
-TEST_F(CloudClientTest, registerDevice)
-{
-    res = cloudClient->registerDevice(data);
-
-    EXPECT_EQ(res, 0);
-    EXPECT_NE(data, "");
-    printData();
-}
 
 TEST_F(CloudClientTest, uploadHeartbeat)
 {
@@ -172,23 +145,128 @@ TEST_F(CloudClientTest, uploadHeartbeat)
     printData();
 }
 
-TEST_F(CloudClientTest, uploadLog)
+TEST_F(CloudClientTest, registerDevice)
 {
-    res = cloudClient->uploadLog(data);
+    Json::Value sn;
+    sn["id"] = "p_deviceSN";
+    sn["type"] = "string";
+    sn["value"] = "XPCA1403CNSIOLW7";
+
+    Json::Value version;
+    version["id"] = "p_version";
+    version["type"] = "string";
+    version["value"] = "1.2.4.6";
+
+    Json::Value ssid;
+    ssid["id"] = "p_hostSSID";
+    ssid["type"] = "string";
+    ssid["value"] = "";
+
+    Json::Value router;
+    router["id"] = "p_hostRouter";
+    router["type"] = "string";
+    router["value"] = "";
+
+    Json::Value signalStrength;
+    signalStrength["id"] = "p_netSignalStrength";
+    signalStrength["type"] = "string";
+    signalStrength["value"] = "3";
+
+    Json::Value mac;
+    mac["id"] = "p_mac";
+    mac["type"] = "string";
+    mac["value"] = "00:24:e8:08:77:6c\n";
+
+    Json::Value deviceLock;
+    deviceLock["id"] = "p_deviceLock";
+    deviceLock["type"] = "bool";
+    deviceLock["value"] = false;
+
+    Json::Value port1;
+    port1["id"] = "p_port1";
+    port1["type"] = "bool";
+    port1["value"] = true;
+
+    Json::Value port1_lock;
+    port1_lock["id"] = "p_port1_lock";
+    port1_lock["type"] = "bool";
+    port1_lock["value"] = false;
+
+    Json::Value port2;
+    port2["id"] = "p_port2";
+    port2["type"] = "bool";
+    port2["value"] = true;
+
+    Json::Value port2_lock;
+    port2_lock["id"] = "p_port2_lock";
+    port2_lock["type"] = "bool";
+    port2_lock["value"] = false;
+
+    Json::Value port3;
+    port3["id"] = "p_port3";
+    port3["type"] = "bool";
+    port3["value"] = true;
+
+    Json::Value port3_lock;
+    port3_lock["id"] = "p_port3_lock";
+    port3_lock["type"] = "bool";
+    port3_lock["value"] = false;
+
+    Json::Value port4;
+    port4["id"] = "p_port4";
+    port4["type"] = "bool";
+    port4["value"] = true;
+
+    Json::Value port4_lock;
+    port4_lock["id"] = "p_port4_lock";
+    port4_lock["type"] = "bool";
+    port4_lock["value"] = false;
+
+    Json::Value array;
+    array.append(sn);
+    array.append(version);
+    array.append(ssid);
+    array.append(router);
+    array.append(signalStrength);
+    array.append(mac);
+    array.append(deviceLock);
+    array.append(port1);
+    array.append(port1_lock);
+    array.append(port2);
+    array.append(port2_lock);
+    array.append(port3);
+    array.append(port3_lock);
+    array.append(port4);
+    array.append(port4_lock);
+
+
+    //data.append(sn);
+    Json::Value properties;
+    //properties["id"] = "FDE7152926FE932C";
+    properties["cmd"] = "PropertyCreate";
+    //properties["name"] = "XPOWER";
+    properties["data"] = array;
+
+    string str = properties.toString();
+    cout << "properties: \n" << str << endl;
+    res = cloudClient->registerDevice(str ,data);
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
     printData();
 }
 
-TEST_F(CloudClientTest, downloadFile)
+TEST_F(CloudClientTest, getDeviceProperty)
 {
-    res = cloudClient->downloadFile(data);
+    res = cloudClient->getDeviceProperty(data);
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
     printData();
 }
+
+
+
 
 TEST_F(CloudClientTest, factoryReset)
 {
@@ -199,10 +277,21 @@ TEST_F(CloudClientTest, factoryReset)
     printData();
 }
 
+TEST_F(CloudClientTest, getTrigger)
+{
+    res = cloudClient->getTrigger(data);
+
+    EXPECT_EQ(res, 0);
+    EXPECT_NE(data, "");
+    printData();
+}
+*/
+
 
 TEST_F(CloudClientTest, createSubDevice)
 {
-    res = cloudClient->createSubDevice(data);
+    string subDeviceMac("000D6F0000AA3BD3");
+    res = cloudClient->createSubDevice(subDeviceMac, data);
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
@@ -210,11 +299,46 @@ TEST_F(CloudClientTest, createSubDevice)
 }
 
 
-TEST_F(CloudClientTest, deleteSubDevice)
+TEST_F(CloudClientTest, bindSubDevice)
 {
-    res = cloudClient->deleteSubDevice(data);
+    string subDeviceID("EF9BE91457682163");
+    res = cloudClient->bindSubDevice(subDeviceID, data);
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
     printData();
-} */
+}
+
+TEST_F(CloudClientTest, deleteSubDevice)
+{
+    string subDeviceID("EF9BE91457682163");
+    res = cloudClient->deleteSubDevice(subDeviceID, data);
+
+    EXPECT_EQ(res, 0);
+    EXPECT_NE(data, "");
+    printData();
+}
+
+/*
+
+TEST_F(CloudClientTest, uploadLog)
+{
+    res = cloudClient->uploadLog(data);
+
+    EXPECT_EQ(res, 0);
+    EXPECT_NE(data, "");
+    printData();
+}
+
+TEST_F(CloudClientTest, putDeviceProperty)
+{
+    res = cloudClient->putDeviceProperty(data);
+
+    EXPECT_EQ(res, 0);
+    EXPECT_NE(data, "");
+    printData();
+}
+
+ */
+
+
