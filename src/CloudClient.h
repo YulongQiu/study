@@ -23,9 +23,9 @@ public:
     int getUserInfo(string &replayData);
     int getQRCode(string &replayData);
     int getMQConfig(string &replayData);
-    //int getLocation(string &replayData);
+    int getLocation(string &replayData);
     int getDeviceProperty(string &replayData);
-    int putDeviceProperty(string &replayData);
+    int putDeviceProperty(string &data, string &replayData);
     int registerDevice(string &properties, string &replayData);
     int uploadHeartbeat(string &replayData);
     int uploadLog(string &replayData);
@@ -37,11 +37,6 @@ public:
     int getTrigger(string &replayData);
 
 public:
-    Signal<ReplyId> qrcodeDone;
-
-private:
-    void onqrCodeComplete(HttpReply* reply);
-
     void addCommonHeader(string &url);
     void addToken(RestClient::ctypelist &headers);
     string getMagic();

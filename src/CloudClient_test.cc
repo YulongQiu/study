@@ -4,7 +4,7 @@
 //#include "../src/network/cloud/CloudClient.h"
 #include "CloudClient.h"
 #include "md5/md5.h"
-
+/*
 class CloudClientTest : public testing::Test
 {
 protected:
@@ -58,7 +58,7 @@ std::string CloudClientTest::getDMAGIC()
 
     return std::string(str);
 }
-/*
+
 TEST_F(CloudClientTest, getDeviceToken)
 {
     res = cloudClient->getDeviceToken(data);
@@ -76,7 +76,7 @@ TEST_F(CloudClientTest, getDateTime)
     EXPECT_NE(data, "");
     printData();
 }
-
+/*
 TEST_F(CloudClientTest, getUserInfo)
 {
 
@@ -255,6 +255,27 @@ TEST_F(CloudClientTest, registerDevice)
     EXPECT_NE(data, "");
     printData();
 }
+/*
+TEST_F(CloudClientTest, putDeviceProperty)
+{
+
+    Json::Value port1;
+    port1["id"] = "p_port1";
+    port1["type"] = "bool";
+    port1["value"] = false;
+    Json::Value array;
+    array.append(port1);
+    Json::Value value;
+    value["cmd"] = "PropertyChanged";
+    value["data"] = array;
+
+    string property = value.toString();
+    res = cloudClient->putDeviceProperty(property, data);
+
+    EXPECT_EQ(res, 0);
+    EXPECT_NE(data, "");
+    printData();
+}
 
 TEST_F(CloudClientTest, getDeviceProperty)
 {
@@ -265,9 +286,7 @@ TEST_F(CloudClientTest, getDeviceProperty)
     printData();
 }
 
-
-
-
+/*
 TEST_F(CloudClientTest, factoryReset)
 {
     res = cloudClient->factoryReset(data);
@@ -285,8 +304,6 @@ TEST_F(CloudClientTest, getTrigger)
     EXPECT_NE(data, "");
     printData();
 }
-*/
-
 
 TEST_F(CloudClientTest, createSubDevice)
 {
@@ -319,8 +336,6 @@ TEST_F(CloudClientTest, deleteSubDevice)
     printData();
 }
 
-/*
-
 TEST_F(CloudClientTest, uploadLog)
 {
     res = cloudClient->uploadLog(data);
@@ -330,15 +345,17 @@ TEST_F(CloudClientTest, uploadLog)
     printData();
 }
 
-TEST_F(CloudClientTest, putDeviceProperty)
+TEST_F(CloudClientTest, getLocation)
 {
-    res = cloudClient->putDeviceProperty(data);
+    res = cloudClient->getLocation(data);
 
     EXPECT_EQ(res, 0);
     EXPECT_NE(data, "");
     printData();
 }
 
- */
+*/
+
+
 
 

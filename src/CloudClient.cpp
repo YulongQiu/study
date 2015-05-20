@@ -1,8 +1,8 @@
 #include "CloudClient.h"
 
 
-connect(cli->qrcodeDone, this, &M2MManager::getQRCodeComplete);
-cli->getQRCode(0);
+//c/onnect(cli->qrcodeDone, this, &M2MManager::getQRCodeComplete);
+//cli->getQRCode(0);
 
 
 
@@ -110,7 +110,6 @@ int CloudClient::getQRCode(string &replayData)
     addCommonHeader(url);
     url += "&UTYPE=0&QRTYPE=1&SIZE=64&FORMAT=png";
 
-    HttpRequest req(url);
     RestClient::response res = httpGet(url, _deviceToken);
     if (res.code != REST_CODE_OK)
     {
@@ -135,14 +134,14 @@ int CloudClient::getMQConfig(string &replayData)
     replayData = res.body;
     return 0;
 }
-/*
+
 int CloudClient::getLocation(string &replayData)
 {
     string url = _apiUrl.getLocationUrl();
     url += "?PID=M500&DID=" + _productId;
 
     RestClient::response res;
-    res = httpGet(url);
+    res = httpGet(url, _deviceToken);
 
     if (res.code != REST_CODE_OK)
     {
@@ -150,7 +149,7 @@ int CloudClient::getLocation(string &replayData)
     }
     replayData = res.body;
     return 0;
-} */
+}
 
 int CloudClient::getDeviceProperty(string &replayData)
 {
@@ -168,9 +167,19 @@ int CloudClient::getDeviceProperty(string &replayData)
     return 0;
 }
 
-int CloudClient::putDeviceProperty(string &replayData)
+int CloudClient::putDeviceProperty(string &data, string &replayData)
 {
-    replayData = "1";
+    string url = _apiUrl.getDevicePropertyUrl();
+    url += "?PID=M500&DID=" + _productId;
+
+    RestClient::response res;
+    res = httpPut(url, _deviceToken, data);
+
+    if (res.code != REST_CODE_OK)
+    {
+        return -1;
+    }
+    replayData = res.body;
     return 0;
 }
 
@@ -212,13 +221,13 @@ int CloudClient::uploadLog(string &replayData)
 {
     std::string logFile = "/tmp/log/xweb.log";
     std::string file = logFile + "." + _productId;
-    std::string copyLogfile = "cp " + logFile + " " + file + " && cat /dev/null > " + logFile;
+    std::string copyLogfile = "sudo cp " + logFile + " " + file + " && cat /dev/null > " + logFile;
     if (system(copyLogfile.c_str()) == 0)
     {
-        std::string uploadCmd = "curl -X -H \"Content-Type: multipart/related\" --form \"file=@" + file+ "\" ";
+        std::string uploadCmd = "curl -H \"Content-Type: multipart/related\" --form \"file=@" + file+ "\" ";
         uploadCmd += "\"" + _apiUrl.getDiagnoseInfoUrl() + "?PID=M500&DID=" + _productId
                         + "\" -H \"DTOKEN: "+ _deviceToken +"\"";
-        //LOG(WARNING)<<cmd;
+        std::cout << "uploadCmd: " << uploadCmd << std::endl;
         if (system(uploadCmd.c_str()) == 0)
         {
             replayData = "Upload seccess.";
