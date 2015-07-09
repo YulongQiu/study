@@ -49,5 +49,26 @@ HasPtr& HasPtr::operator=(const HasPtr &other)
     return *this;
 }
 
+void HasPtr::print()
+{
+    std::cout << *ps << " " << i << std::endl;
+}
+
+void swap(HasPtr &left, HasPtr &right)
+{
+    using std::swap;
+    swap(left.ps, right.ps);
+    swap(left.i, right.i);
+    std::cout << "swap" << std::endl;
+}
+
+void test13_30()
+{
+    HasPtr hasPtr1("hello", 0);
+    HasPtr hasPtr2("world", 1);
+    swap(hasPtr1, hasPtr2);
+    hasPtr1.print();
+    hasPtr2.print();
+}
 
 } // namespace
