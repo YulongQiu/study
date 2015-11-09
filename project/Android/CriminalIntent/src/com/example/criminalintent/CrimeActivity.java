@@ -1,4 +1,4 @@
-package com.example.criminalintent2;
+package com.example.criminalintent;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

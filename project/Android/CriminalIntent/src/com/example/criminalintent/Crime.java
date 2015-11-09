@@ -1,4 +1,4 @@
-package com.example.criminalintent2;
+package com.example.criminalintent;
 
 import java.util.UUID;
 
