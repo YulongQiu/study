@@ -42,5 +42,16 @@ public class Crime {
 	public void setSolved(boolean solved) {
 		mSolved = solved;
 	}
+
+	/*
+	 * For ArrayAdapter<T>.getView();
+	 * 
+	 */
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return mTitle;
+	}
+	
 	
 }
