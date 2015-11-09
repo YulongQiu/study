@@ -2,9 +2,9 @@ package com.example.criminalintent;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -36,7 +36,11 @@ public class CrimeListFragment extends ListFragment {
 		// TODO Auto-generated method stub
 //		Crime crime = (Crime)getListAdapter().getItem(position);
 		Crime crime = ((CrimeAdapter)getListAdapter()).getItem(position);
-		Log.d(TAG, crime.getTitle() + " was clicked.");
+//		Log.d(TAG, crime.getTitle() + " was clicked.");
+		
+		Intent intent = new Intent(getActivity(), CrimeActivity.class);
+		intent.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getId());
+		startActivity(intent);
 	}
 
 	private class CrimeAdapter extends ArrayAdapter<Crime> {
