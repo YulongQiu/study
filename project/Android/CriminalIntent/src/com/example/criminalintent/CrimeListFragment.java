@@ -75,4 +75,13 @@ public class CrimeListFragment extends ListFragment {
 		
 		
 	}
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+	}
+	
+	
 }
