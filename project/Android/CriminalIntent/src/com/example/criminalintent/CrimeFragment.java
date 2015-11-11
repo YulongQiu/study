@@ -1,7 +1,10 @@
 package com.example.criminalintent;
 
+import java.util.Date;
 import java.util.UUID;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +25,7 @@ public class CrimeFragment extends Fragment {
 	public static final String EXTRA_CRIME_ID =
 			"com.example.criminalintent.crime_id";
 	private static final String DIALOG_DATE = "date";
+	private static final int REQUEST_DATE = 0;
 
 	private Crime mCrime;
 	private EditText mTitleField;
@@ -77,10 +81,9 @@ public class CrimeFragment extends Fragment {
 			
 		});
 		
-		CharSequence format = "EEEE',' hh:mm MM-dd-yyyy";
-		CharSequence formatDate = DateFormat.format(format, mCrime.getDate());
+
 		mDateButton = (Button)v.findViewById(R.id.crime_date);
-		mDateButton.setText(formatDate.toString());
+		updateDate();
 		mDateButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -88,6 +91,7 @@ public class CrimeFragment extends Fragment {
 				// TODO Auto-generated method stub
 				FragmentManager fm = getActivity().getSupportFragmentManager();
 				DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+				dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
 				dialog.show(fm, DIALOG_DATE);
 			}
 		});
@@ -104,6 +108,25 @@ public class CrimeFragment extends Fragment {
 			
 		});
 		return v;
+	}
+
+	private void updateDate() {
+		CharSequence format = "EEEE',' hh:mm MM-dd-yyyy";
+		CharSequence formatDate = DateFormat.format(format, mCrime.getDate());
+		mDateButton.setText(formatDate.toString());
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		if (resultCode != Activity.RESULT_OK) return;
+		
+		if (requestCode == REQUEST_DATE) {
+			Date date = (Date)data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+			mCrime.setDate(date);
+			updateDate();
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
 	
